@@ -19,12 +19,12 @@
             }
         ],
         "dfp": {
-            "name": "",
-            "semverRange": ""
+            "name": "PIC18F-Q_DFP",
+            "semverRange": "^1.23.425"
         },
         "configurator": {
-            "name": "",
-            "semverRange": ""
+            "name": "MCC",
+            "semverRange": ">=5.3.7"
         },
         "device": {
             "metaDataVersion": "1.0.0",
@@ -37,8 +37,19 @@
             }
         },
         "author": "Seyed Mazloom",
-        "peripherals": [],
-        "keywords": [],
+        "peripherals": [
+            "SRPORT",
+            "PWM",
+            "UTMR",
+            "PWM",
+            "DMA",
+            "CLC"
+        ],
+        "keywords": [
+            "Melody",
+            "CIP",
+            "SRPORT"
+        ],
         "additionalData": {
             "longDescription": {
                 "metaDataVersion": "1.0.0",
