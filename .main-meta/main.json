@@ -4,8 +4,8 @@
     "content": {
         "metaDataVersion": "1.3.0",
         "name": "com.microchip.mcu8.mplabx.project.pic18f46q71-srport-shift-register-mplab-melody",
-        "version": " ",
-        "displayName": "",
+        "version": "1.0.0 ",
+        "displayName": "PIC18F46Q71 Shift Register Using SRPORT Module",
         "projectName": "pic18f46q71-srport-shift-register-mplab-melody",
         "shortDescription": "This code example demonstrates a SIPO shift register application using the signal routing port peripheral using PIC18-Q71 family of devices.",
         "ide": {

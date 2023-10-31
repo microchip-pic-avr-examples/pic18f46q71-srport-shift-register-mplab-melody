@@ -9,7 +9,7 @@ This project highlights the advanced core-independent peripherals found on the P
 
 ## Related Documentation
 
-For more details and code examples on the PIC18F46Q24 click on the following links:
+For more details and code examples on the PIC18F46Q71 click on the following links:
 
 - [PIC18F46Q71 Product Page](https://www.microchip.com/en-us/product/pic18f46q71)
 - [Using the Signal Routing Port Module on 8-bit PIC® Microcontrollers](https://www.microchip.com/en-us/application-notes/tb3322)
@@ -48,6 +48,14 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - PORTW Clock: Enabled
   - Clock Source: CLC1_OUT
   - Data Flip Flops: Enabled
+  - PORTWIN0: RW1
+  - PORTWIN1: RW2
+  - PORTWIN2: RW3
+  - PORTWIN3: RW4
+  - PORTWIN4: RW5
+  - PORTWIN5: RW6
+  - PORTWIN6: RW7
+  - PORTWIN7: RC7 (Physical pin RC7 is used as input to the SRPORT module)
   <br><img src="images/Q71-SRPORT.png" width="400">
 
 
