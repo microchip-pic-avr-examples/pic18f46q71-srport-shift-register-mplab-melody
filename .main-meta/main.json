@@ -36,12 +36,11 @@
                 "versionRange": "*"
             }
         },
-        "author": "Seyed Mazloom",
+        "author": "Microchip",
         "peripherals": [
             "SRPORT",
             "PWM",
             "UTMR",
-            "PWM",
             "DMA",
             "CLC"
         ],
