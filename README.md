@@ -2,23 +2,23 @@
 
 # SIPO Shift Register Using Signal Routing Port
 
-This project highlights the advanced core-independent peripherals found on the PIC18-Q71 family of devices to create a Serial-In, Parallel-Out shift register. This project implements the Signal Routing Port (SRPORT) module to shift and store the incoming data based on a clock signal. The Direct Memory Access (DMA) module is used to transfer data between peripherals and the memory core-independently without any CPU intervention. PWM modules are used to generate clock and data signals. The UART module is used to transmit data on the serial bus.
+This project highlights the advanced core-independent peripherals found on the PIC18-Q71 family of devices to create a Serial-In Parallel-Out (SIPO) shift register. This project implements the Signal Routing Port (SRPORT) module to shift and store the incoming data based on a clock signal. The Direct Memory Access (DMA) module is used to transfer data between peripherals and the memory core independently without any CPU intervention. The Pulse-Width Modulator (PWM) modules are used to generate clock and data signals. The Universal Asynchronous Receiver Transmitter (UART) module is used to transmit data on the serial bus.
 
 <br><img src="images/Q71-BLOCK-DIAGRAM.png" width="400">
 
 
 ## Related Documentation
 
-For more details and code examples on the PIC18F46Q71 click on the following links:
+For more details and code examples on the PIC18F46Q71, click on the following links:
 
 - [PIC18F46Q71 Product Page](https://www.microchip.com/en-us/product/pic18f46q71)
 - [Using the Signal Routing Port Module on 8-bit PIC® Microcontrollers](https://www.microchip.com/en-us/application-notes/tb3322)
 
 ## Software Used
 
-- [MPLAB® X IDE  v6.15 or newer](http://www.microchip.com/mplab/mplab-x-ide)
-- [MPLAB® XC8 v2.45 or newer](http://www.microchip.com/mplab/compilers)
-- [PIC18F-Q_DFP v1.22.413 or newer Series Device Pack](https://packs.download.microchip.com/)
+- [MPLAB® X IDE  v6.15](http://www.microchip.com/mplab/mplab-x-ide) or newer
+- [MPLAB® XC8 v2.45](http://www.microchip.com/mplab/compilers) or newer
+- [PIC18F-Q_DFP v1.22.413](https://packs.download.microchip.com/) or newer Series Device Pack
 
 ## Hardware Used
 
@@ -27,15 +27,15 @@ For more details and code examples on the PIC18F46Q71 click on the following lin
 
 
 ## Shift Register
-Shift registers are important digital components that can be used to store and transfer data. A Serial-In Parallel-Out (SIPO) shift register can be used in applications where data buffering or data acquisition based on a clock is needed. A SIPO shift register consists of multiple flip flops chained together in series with data and clock signals as inputs. In this code example, the parallel output is stored as bytes of data in memory. A block diagram of a basic SIPO shift register is shown below:
-<br><img src="images/Q71-SHIFT-REGISTER.png" width="500">
+Shift registers are important digital components that can be used to store and transfer data. A SIPO shift register can be used in applications where data buffering or data acquisition based on a clock is needed. A SIPO shift register consists of multiple flip flops chained together in series with data and clock signals as inputs. In this code example, the parallel output is stored as bytes of data in memory. A block diagram of a basic SIPO shift register is shown below:
+<br><img src="images/Q71-SHIFT-REGISTER.png" width="700">
 
 
 ## 1. Setup
 
 The following peripheral configurations are set up using MPLAB® Code Configurator (MCC) Melody for the PIC18F46Q71:
 
-<br><img src="images/Q71-BUILDER.png" width="400">
+<br><img src="images/Q71-BUILDER.png" width="700">
 
 - **SRPORT**
 <br>In this code example, the Signal Routing Port module is used to shift and store data based on an incoming clock signal. The SRPORT is configured as a shift register by internally connecting the output of each signal routing pin to the input of the previous signal routing pin.
@@ -76,7 +76,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
 
 
 - **PWM1**
-<br>The PWM1 module is used to generate a 1kHz clock signal. This clock signal is used as an input (through the CLC module) to the SRPORT and the Universal Timer modules. Data shift and storage is done based on the rising edge of this clock signal.
+<br>The PWM1 module is used to generate a 1 kHz clock signal. This clock signal is used as an input (through the Configurable Logic Cell (CLC) module) to the SRPORT and the Universal Timer modules. Data shift and storage is done based on the rising edge of this clock signal.
 
   Module configuration:
   - PWM: Enabled
@@ -100,7 +100,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
 
 
 - **TU16A**
-<br>In this project, the Universal Timer is used to monitor and count the rising edge of the input clock signal. This Universal Timer module triggers DMA1 to transfer data from PORTW register to RAM every 8 clock cycle (one byte of data). The output of the timer is in pulse mode which can be use to monitor or trigger any other modules/components as necessary based on the application.
+<br>In this project, the Universal Timer is used to monitor and count the rising edge of the input clock signal. This Universal Timer module triggers DMA1 to transfer data from PORTW register to RAM every eight clock cycles (one byte of data). The output of the timer is in pulse mode, which can be used to monitor or trigger any other modules/components (as necessary), based on the application.
 
   Module configuration:
   - Timer: Disabled
@@ -117,7 +117,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
 
 
 - **TMR2**
-<br>The Timer2 module is used in conjunction with the CLC module to create a hardware based code-free switch debouncer. The push button on the Curiosity HPC board is used to start a each round of data shift, storage and transfer (based on the number of bytes configured by the user). Timer2 automates the debouncing process using its monostable mode of operation. In this mode, the first switch activation is used to start the timer counting, ignoring any subsequent bouncing. Once the timer count reaches a predetermined value, the timer peripheral will produce a signaling event that can be used to indicate a valid switch activation has been detected.
+<br>The Timer2 module is used in conjunction with the CLC module to create a hardware based code-free switch debouncer. The push button on the Curiosity HPC board is used to start each round of data shift, storage and transfer (based on the number of bytes configured by the user). Timer2 automates the debouncing process using its monostable mode of operation. In this mode, the first switch activation is used to start the timer counting, ignoring any subsequent bouncing. Once the timer count reaches a predetermined value, the timer peripheral will produce a signaling event that can be used to indicate a valid switch activation has been detected.
 
   Module configuration:
   - Timer: Enabled
@@ -148,7 +148,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Destination Counter Reload Action: SIRQEN is not cleared
   - DMADCNTI Interrupt: Enabled
   
-  **_Note:_** Destination size and variable are defined in software.
+  **Note:** Destination size and variable are defined in software.
 
 
 - **DMA2**
@@ -167,7 +167,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Destination Mode: Unchanged
   - Destination Counter Reload Action: SIRQEN is not cleared
 
-  **_Note:_** Source size and variable are defined in software.
+  **Note:** Source size and variable are defined in software.
 
 
 - **CLC1**
@@ -223,7 +223,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   |   RW5    | Internal Connection| PORTWIN5*   |
   |   RW6    | Internal Connection| PORTWIN6*   |
 
-  **_*Note:_** Pin assignments to PORTWINx can be done either from PORTW module or Pin Grid View in MCC Melody.
+  ***Note:** Pin assignments to PORTWINx can be done either from PORTW module or Pin Grid View in MCC Melody.
 
   **Pins Grid View:**
   <br><img src="images/Q71-PINGRID.png" width="1000">
