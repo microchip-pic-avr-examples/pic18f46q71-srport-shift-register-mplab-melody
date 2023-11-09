@@ -37,7 +37,7 @@
  */
 
 
-#define NUM_BYTE    1           // Number of bytes to be shifted and transfered to memory
+#define NUM_BYTE    256           // Number of bytes to be shifted and transfered to memory
 
 void DMA1_DCNT_CustomISR(void);
 void CLC2_CustomISR(void);

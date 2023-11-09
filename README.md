@@ -18,7 +18,7 @@ For more details and code examples on the PIC18F46Q71, click on the following li
 
 - [MPLAB® X IDE  v6.15](http://www.microchip.com/mplab/mplab-x-ide) or newer
 - [MPLAB® XC8 v2.45](http://www.microchip.com/mplab/compilers) or newer
-- [PIC18F-Q_DFP v1.22.413](https://packs.download.microchip.com/) or newer Series Device Pack
+- [PIC18F-Q_DFP v1.22.425](https://packs.download.microchip.com/) or newer Series Device Pack
 
 ## Hardware Used
 
@@ -59,6 +59,13 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   <br><img src="images/Q71-SRPORT.png" width="400">
 
 
+- **UART1PLIB:**
+  - Enable UART: Enabled
+  - Enable Receive: Enabled
+  - Enable Transmit: Enabled
+  <br><img src="images/Q71-UART1PLIB.png" width="400">
+
+
 - **UART1:**
 <br>The UART module is used to transfer the stored data through the serial BUS. The Virtual COM Port on the Curiosity development board is used to transfer data to the terminal. The DMA2 module is used to load the UART transmit buffer with the stored data.
   - UART PLIB Selector: UART1
@@ -67,12 +74,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Data Size: 8
   - Stop Bits: 1
   - Redirect Printf to UART: Enabled
-
-
-- **UART1PLIB:**
-  - Enable UART: Enabled
-  - Enable Receive: Enabled
-  - Enable Transmit: Enabled
+  <br><img src="images/Q71-UART1.png" width="400">
 
 
 - **PWM1**
@@ -83,6 +85,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Clock Source: Fosc
   - Frequency: 1 KHz
   - Duty Cycle: 50%
+  <br><img src="images/Q71-PWM1.png" width="400">
 
 
 - **PWM2**
@@ -93,10 +96,13 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Clock Source: MFINTOSC 500 KHz
   - Frequency: 300 Hz
   - Duty Cycle: 65%
+  <br><img src="images/Q71-PWM2.png" width="400">
+
 
 
 - **UTMR Driver**
   - Timer Dependency: TU16A
+  <br><img src="images/Q71-UTMR.png" width="400">
 
 
 - **TU16A**
@@ -114,6 +120,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Output Polarity: Low
   - Timer Interrupt: Enabled
   - PR Match Interrupt: Enabled
+  <br><img src="images/Q71-TU16A.png" width="400">
 
 
 - **TMR2**
@@ -128,6 +135,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Clock Polarity: Rising Edge
   - Prescaler: 1:4
   - Time Period: 30 ms
+  <br><img src="images/Q71-TMR2.png" width="400">
 
 
 - **DMA1**
@@ -147,8 +155,11 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Destination Mode: Incremented
   - Destination Counter Reload Action: SIRQEN is not cleared
   - DMADCNTI Interrupt: Enabled
-  
+
   **Note:** Destination size and variable are defined in software.
+
+  <br><img src="images/Q71-DMA1.png" width="400">
+
 
 
 - **DMA2**
@@ -168,6 +179,8 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Destination Counter Reload Action: SIRQEN is not cleared
 
   **Note:** Source size and variable are defined in software.
+
+  <br><img src="images/Q71-DMA2.png" width="400">
 
 
 - **CLC1**
