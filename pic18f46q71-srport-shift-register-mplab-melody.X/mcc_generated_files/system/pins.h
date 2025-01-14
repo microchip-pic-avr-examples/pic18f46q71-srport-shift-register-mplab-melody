@@ -8,11 +8,11 @@
  * @brief This is generated driver header for pins. 
  *        This header file provides APIs for all pins selected in the GUI.
  *
- * @version Driver Version  3.1.0
+ * @version Driver Version  3.1.1
 */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -150,44 +150,24 @@
 #define IO_RB7_SetDigitalMode()     do { ANSELBbits.ANSELB7 = 0; } while(0)
 
 // get/set RC5 aliases
-#define SW1_TRIS                 TRISCbits.TRISC5
-#define SW1_LAT                  LATCbits.LATC5
-#define SW1_PORT                 PORTCbits.RC5
-#define SW1_WPU                  WPUCbits.WPUC5
-#define SW1_OD                   ODCONCbits.ODCC5
-#define SW1_ANS                  ANSELCbits.ANSELC5
-#define SW1_SetHigh()            do { LATCbits.LATC5 = 1; } while(0)
-#define SW1_SetLow()             do { LATCbits.LATC5 = 0; } while(0)
-#define SW1_Toggle()             do { LATCbits.LATC5 = ~LATCbits.LATC5; } while(0)
-#define SW1_GetValue()           PORTCbits.RC5
-#define SW1_SetDigitalInput()    do { TRISCbits.TRISC5 = 1; } while(0)
-#define SW1_SetDigitalOutput()   do { TRISCbits.TRISC5 = 0; } while(0)
-#define SW1_SetPullup()          do { WPUCbits.WPUC5 = 1; } while(0)
-#define SW1_ResetPullup()        do { WPUCbits.WPUC5 = 0; } while(0)
-#define SW1_SetPushPull()        do { ODCONCbits.ODCC5 = 0; } while(0)
-#define SW1_SetOpenDrain()       do { ODCONCbits.ODCC5 = 1; } while(0)
-#define SW1_SetAnalogMode()      do { ANSELCbits.ANSELC5 = 1; } while(0)
-#define SW1_SetDigitalMode()     do { ANSELCbits.ANSELC5 = 0; } while(0)
-
-// get/set RC6 aliases
-#define IO_RC6_TRIS                 TRISCbits.TRISC6
-#define IO_RC6_LAT                  LATCbits.LATC6
-#define IO_RC6_PORT                 PORTCbits.RC6
-#define IO_RC6_WPU                  WPUCbits.WPUC6
-#define IO_RC6_OD                   ODCONCbits.ODCC6
-#define IO_RC6_ANS                  ANSELCbits.ANSELC6
-#define IO_RC6_SetHigh()            do { LATCbits.LATC6 = 1; } while(0)
-#define IO_RC6_SetLow()             do { LATCbits.LATC6 = 0; } while(0)
-#define IO_RC6_Toggle()             do { LATCbits.LATC6 = ~LATCbits.LATC6; } while(0)
-#define IO_RC6_GetValue()           PORTCbits.RC6
-#define IO_RC6_SetDigitalInput()    do { TRISCbits.TRISC6 = 1; } while(0)
-#define IO_RC6_SetDigitalOutput()   do { TRISCbits.TRISC6 = 0; } while(0)
-#define IO_RC6_SetPullup()          do { WPUCbits.WPUC6 = 1; } while(0)
-#define IO_RC6_ResetPullup()        do { WPUCbits.WPUC6 = 0; } while(0)
-#define IO_RC6_SetPushPull()        do { ODCONCbits.ODCC6 = 0; } while(0)
-#define IO_RC6_SetOpenDrain()       do { ODCONCbits.ODCC6 = 1; } while(0)
-#define IO_RC6_SetAnalogMode()      do { ANSELCbits.ANSELC6 = 1; } while(0)
-#define IO_RC6_SetDigitalMode()     do { ANSELCbits.ANSELC6 = 0; } while(0)
+#define IO_RC5_TRIS                 TRISCbits.TRISC5
+#define IO_RC5_LAT                  LATCbits.LATC5
+#define IO_RC5_PORT                 PORTCbits.RC5
+#define IO_RC5_WPU                  WPUCbits.WPUC5
+#define IO_RC5_OD                   ODCONCbits.ODCC5
+#define IO_RC5_ANS                  ANSELCbits.ANSELC5
+#define IO_RC5_SetHigh()            do { LATCbits.LATC5 = 1; } while(0)
+#define IO_RC5_SetLow()             do { LATCbits.LATC5 = 0; } while(0)
+#define IO_RC5_Toggle()             do { LATCbits.LATC5 = ~LATCbits.LATC5; } while(0)
+#define IO_RC5_GetValue()           PORTCbits.RC5
+#define IO_RC5_SetDigitalInput()    do { TRISCbits.TRISC5 = 1; } while(0)
+#define IO_RC5_SetDigitalOutput()   do { TRISCbits.TRISC5 = 0; } while(0)
+#define IO_RC5_SetPullup()          do { WPUCbits.WPUC5 = 1; } while(0)
+#define IO_RC5_ResetPullup()        do { WPUCbits.WPUC5 = 0; } while(0)
+#define IO_RC5_SetPushPull()        do { ODCONCbits.ODCC5 = 0; } while(0)
+#define IO_RC5_SetOpenDrain()       do { ODCONCbits.ODCC5 = 1; } while(0)
+#define IO_RC5_SetAnalogMode()      do { ANSELCbits.ANSELC5 = 1; } while(0)
+#define IO_RC5_SetDigitalMode()     do { ANSELCbits.ANSELC5 = 0; } while(0)
 
 // get/set RC7 aliases
 #define IO_RC7_TRIS                 TRISCbits.TRISC7

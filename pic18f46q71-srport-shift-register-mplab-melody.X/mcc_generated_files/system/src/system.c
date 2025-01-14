@@ -7,10 +7,12 @@
  * 
  * @brief This file contains the API implementation for the System driver.
  *
- * @version Driver Version 1.0.2
+ * @version Driver Version 1.0.3
+ *
+ * @version Package Version 1.0.4
 */
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -40,6 +42,7 @@
 */
 void CPU_Initialize(void);
 
+
 /**
  * @ingroup systemdriver
  * @brief Performs lock operation. It is mandatory for DMA operation.
@@ -52,7 +55,8 @@ void SYSTEM_Initialize(void)
 {
     CLOCK_Initialize();
     PIN_MANAGER_Initialize();
-    CLC1_Initialize();
+    TMR2_Initialize();
+    TU16A_Initialize();
     CLC2_Initialize();
     CPU_Initialize();
     DMA1_Initialize();
@@ -60,8 +64,6 @@ void SYSTEM_Initialize(void)
     PORTW_Initialize();
     PWM1_16BIT_Initialize();
     PWM2_16BIT_Initialize();
-    Timer2_Initialize();
-    TU16A_Initialize();
     UART1_Initialize();
     INTERRUPT_Initialize();
     SystemArbiter_Initialize();
@@ -69,6 +71,8 @@ void SYSTEM_Initialize(void)
 
 void CPU_Initialize(void)
 {
+    //PRLOCKED unlocked; 
+    PRLOCK = 0x0;
     //PR priority level 7; 
     SCANPR = 0x7;
     //PR priority level 7; 
@@ -87,8 +91,6 @@ void CPU_Initialize(void)
     PRODH = 0x0;
     //PRODL undefined; 
     PRODL = 0x0;
-    //PRLOCKED unlocked; 
-    PRLOCK = 0x0;
 }
 
 void SystemArbiter_Initialize(void)

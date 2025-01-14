@@ -7,10 +7,10 @@
  * 
  * @brief This file contains the API implementations for the CLC2 driver.
  *
- * @version CLC2 Driver Version 1.1.0
+ * @version CLC2 Driver Version 1.2.0
 */
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -37,6 +37,7 @@
 static void (*CLC2_CLCI_InterruptHandler)(void);
 static void CLC2_DefaultCLCI_ISR(void);
 
+
 void CLC2_Initialize(void) 
 {
     
@@ -46,12 +47,12 @@ void CLC2_Initialize(void)
     CLCnPOL = 0xA;
     // LCD1S TMR2; 
     CLCnSEL0 = 0x14;
-    // LCD2S CLCIN0 (CLCIN0PPS); 
-    CLCnSEL1 = 0x0;
-    // LCD3S CLCIN0 (CLCIN0PPS); 
-    CLCnSEL2 = 0x0;
-    // LCD4S CLCIN0 (CLCIN0PPS); 
-    CLCnSEL3 = 0x0;
+    // LCD2S HFINTOSC; 
+    CLCnSEL1 = 0x9;
+    // LCD3S HFINTOSC; 
+    CLCnSEL2 = 0x9;
+    // LCD4S HFINTOSC; 
+    CLCnSEL3 = 0x9;
     // LCG1D1N disabled; LCG1D1T enabled; LCG1D2N disabled; LCG1D2T disabled; LCG1D3N disabled; LCG1D3T disabled; LCG1D4N disabled; LCG1D4T disabled; 
     CLCnGLS0 = 0x2;
     // LCG2D1N disabled; LCG2D1T disabled; LCG2D2N disabled; LCG2D2T disabled; LCG2D3N disabled; LCG2D3T disabled; LCG2D4N disabled; LCG2D4T disabled; 
@@ -65,6 +66,7 @@ void CLC2_Initialize(void)
     // LCMODE JK flip-flop with R; LCINTN enabled; LCINTP enabled; LCEN enabled; 
     CLCnCON = 0x9E;
 
+
     // Clear the CLC interrupt flag
     PIR5bits.CLC2IF = 0;
     //Configure interrupt handlers
@@ -75,13 +77,40 @@ void CLC2_Initialize(void)
 
 void CLC2_Enable(void) 
 {
+    CLCSELECTbits.SLCT = 1;
     CLCnCONbits.EN = 1;
 }
 
 void CLC2_Disable(void) 
 {
+    CLCSELECTbits.SLCT = 1;
     CLCnCONbits.EN = 0;
 }
+
+void CLC2_RisingEdgeDetectionEnable(void) 
+{
+    CLCSELECTbits.SLCT = 1;
+    CLCnCONbits.INTP = 1;
+}
+
+void CLC2_RisingEdgeDetectionDisable(void) 
+{
+    CLCSELECTbits.SLCT = 1;
+    CLCnCONbits.INTP = 0;
+}
+
+void CLC2_FallingEdgeDetectionEnable(void) 
+{
+    CLCSELECTbits.SLCT = 1;
+    CLCnCONbits.INTN = 1;
+}
+
+void CLC2_FallingEdgeDetectionDisable(void) 
+{
+    CLCSELECTbits.SLCT = 1;
+    CLCnCONbits.INTN = 0;
+}
+
 
 void CLC2_ISR(void)
 {   

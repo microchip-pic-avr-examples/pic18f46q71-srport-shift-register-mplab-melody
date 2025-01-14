@@ -11,7 +11,7 @@
 */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -55,7 +55,7 @@ void PWM1_16BIT_Initialize(void);
  * @param None.
  * @return None.
  */
-void PWM1_16BIT_Enable();
+void PWM1_16BIT_Enable(void);
 
 /**
  * @ingroup pwm1_16bit
@@ -64,7 +64,7 @@ void PWM1_16BIT_Enable();
  * @param None.
  * @return None.
  */
-void PWM1_16BIT_Disable();
+void PWM1_16BIT_Disable(void);
 
 /**
  * @ingroup pwm1_16bit

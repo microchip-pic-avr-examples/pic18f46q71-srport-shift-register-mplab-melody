@@ -11,7 +11,7 @@
 */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -80,13 +80,13 @@ void  INTERRUPT_Initialize (void)
 void __interrupt() INTERRUPT_InterruptManager (void)
 {
     // interrupt handler
-    if(PIE2bits.DMA1AIE == 1 && PIR2bits.DMA1AIF == 1)
+    if(PIE5bits.CLC2IE == 1 && PIR5bits.CLC2IF == 1)
+    {
+        CLC2_ISR();
+    }
+    else if(PIE2bits.DMA1AIE == 1 && PIR2bits.DMA1AIF == 1)
     {
         DMA1_DMAAI_ISR();
-    }
-    else if(PIE5bits.TU16AIE == 1 && PIR5bits.TU16AIF == 1)
-    {
-        TU16A_ISR();
     }
     else if(PIE2bits.DMA1DCNTIE == 1 && PIR2bits.DMA1DCNTIF == 1)
     {
@@ -100,9 +100,9 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         DMA1_DMAORI_ISR();
     }
-    else if(PIE5bits.CLC2IE == 1 && PIR5bits.CLC2IF == 1)
+    else if(PIE5bits.TU16AIE == 1 && PIR5bits.TU16AIF == 1)
     {
-        CLC2_ISR();
+        TU16A_ISR();
     }
     else
     {

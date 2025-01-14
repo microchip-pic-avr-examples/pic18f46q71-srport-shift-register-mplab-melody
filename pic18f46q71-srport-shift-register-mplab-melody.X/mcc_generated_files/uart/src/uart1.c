@@ -5,13 +5,13 @@
  * 
  * @ingroup uart1
  * 
- * @brief This is the generated driver implementation file for the UART1 driver using CCL
+ * @brief This is the generated driver implementation file for the UART1 driver using the Universal Asynchronous Receiver and Transmitter (UART) module.
  *
- * @version UART1 Driver Version 3.0.4
+ * @version UART1 Driver Version 3.0.8
 */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -74,15 +74,20 @@ const uart_drv_interface_t UART1 = {
 /**
   Section: UART1 variables
 */
-volatile uart1_status_t uart1RxLastError;
+ /**
+ * @misradeviation{@advisory,19.2}
+ * The UART error status necessitates checking the bitfield and accessing the status within the group byte therefore the use of a union is essential.
+ */
+ /* cppcheck-suppress misra-c2012-19.2 */
+static volatile uart1_status_t uart1RxLastError;
 
 /**
   Section: UART1 APIs
 */
 
-void (*UART1_FramingErrorHandler)(void);
-void (*UART1_OverrunErrorHandler)(void);
-void (*UART1_ParityErrorHandler)(void);
+static void (*UART1_FramingErrorHandler)(void);
+static void (*UART1_OverrunErrorHandler)(void);
+static void (*UART1_ParityErrorHandler)(void);
 
 static void UART1_DefaultFramingErrorCallback(void);
 static void UART1_DefaultOverrunErrorCallback(void);
@@ -97,44 +102,40 @@ void UART1_Initialize(void)
 
     // Set the UART1 module to the options selected in the user interface.
 
-    //
-    U1RXB = 0x0; 
     //RXCHK disabled; 
-    U1RXCHK = 0x0; 
-    //TXB disabled; 
-    U1TXB = 0x0; 
+    U1RXCHK = 0x0;
     //TXCHK disabled; 
-    U1TXCHK = 0x0; 
+    U1TXCHK = 0x0;
     //P1L 0x0; 
-    U1P1L = 0x0; 
+    U1P1L = 0x0;
     //P1H 0x0; 
-    U1P1H = 0x0; 
+    U1P1H = 0x0;
     //P2L 0x0; 
-    U1P2L = 0x0; 
+    U1P2L = 0x0;
     //P2H 0x0; 
-    U1P2H = 0x0; 
+    U1P2H = 0x0;
     //P3L 0x0; 
-    U1P3L = 0x0; 
+    U1P3L = 0x0;
     //P3H 0x0; 
-    U1P3H = 0x0; 
+    U1P3H = 0x0;
     //MODE Asynchronous 8-bit mode; RXEN enabled; TXEN enabled; ABDEN disabled; BRGS high speed; 
-    U1CON0 = 0xB0; 
+    U1CON0 = 0xB0;
     //SENDB disabled; BRKOVR disabled; RXBIMD Set RXBKIF on rising RX input; WUE disabled; ON enabled; 
-    U1CON1 = 0x80; 
+    U1CON1 = 0x80;
     //FLO off; TXPOL not inverted; C0EN Add all TX and RX characters; STP Transmit 1Stop bit, receiver verifies first Stop bit; RXPOL not inverted; RUNOVF RX input shifter stops all activity; 
-    U1CON2 = 0x8; 
+    U1CON2 = 0x8;
     //BRGL 138; 
-    U1BRGL = 0x8A; 
+    U1BRGL = 0x8A;
     //BRGH 0; 
-    U1BRGH = 0x0; 
+    U1BRGH = 0x0;
     //TXBE empty; STPMD in middle of first Stop bit; TXWRE No error; 
-    U1FIFO = 0x2E; 
+    U1FIFO = 0x2E;
     //ABDIE disabled; ABDIF Auto-baud not enabled or not complete; WUIF WUE not enabled by software; 
-    U1UIR = 0x0; 
+    U1UIR = 0x0;
     //TXCIF equal; RXFOIF not overflowed; RXBKIF No Break detected; FERIF no error; CERIF No Checksum error; ABDOVF Not overflowed; PERIF no parity error; TXMTIF empty; 
-    U1ERRIR = 0x80; 
+    U1ERRIR = 0x80;
     //TXCIE disabled; RXFOIE disabled; RXBKIE disabled; FERIE disabled; CERIE disabled; ABDOVE disabled; PERIE disabled; TXMTIE disabled; 
-    U1ERRIE = 0x0; 
+    U1ERRIE = 0x0;
 
     UART1_FramingErrorCallbackRegister(UART1_DefaultFramingErrorCallback);
     UART1_OverrunErrorCallbackRegister(UART1_DefaultOverrunErrorCallback);
@@ -166,47 +167,47 @@ void UART1_Deinitialize(void)
     U1ERRIE = 0x00;
 }
 
-inline void UART1_Enable(void)
+void UART1_Enable(void)
 {
     U1CON1bits.ON = 1; 
 }
 
-inline void UART1_Disable(void)
+void UART1_Disable(void)
 {
     U1CON1bits.ON = 0; 
 }
 
-inline void UART1_TransmitEnable(void)
+void UART1_TransmitEnable(void)
 {
     U1CON0bits.TXEN = 1;
 }
 
-inline void UART1_TransmitDisable(void)
+void UART1_TransmitDisable(void)
 {
     U1CON0bits.TXEN = 0;
 }
 
-inline void UART1_ReceiveEnable(void)
+void UART1_ReceiveEnable(void)
 {
     U1CON0bits.RXEN = 1;
 }
 
-inline void UART1_ReceiveDisable(void)
+void UART1_ReceiveDisable(void)
 {
     U1CON0bits.RXEN = 0;
 }
 
-inline void UART1_SendBreakControlEnable(void)
+void UART1_SendBreakControlEnable(void)
 {
     U1CON1bits.SENDB = 1;
 }
 
-inline void UART1_SendBreakControlDisable(void)
+void UART1_SendBreakControlDisable(void)
 {
     U1CON1bits.SENDB = 0;
 }
 
-inline void UART1_AutoBaudSet(bool enable)
+void UART1_AutoBaudSet(bool enable)
 {
     if(enable)
     {
@@ -219,22 +220,22 @@ inline void UART1_AutoBaudSet(bool enable)
 }
 
 
-inline bool UART1_AutoBaudQuery(void)
+bool UART1_AutoBaudQuery(void)
 {
     return (bool)U1UIRbits.ABDIF; 
 }
 
-inline void UART1_AutoBaudDetectCompleteReset(void)
+void UART1_AutoBaudDetectCompleteReset(void)
 {
     U1UIRbits.ABDIF = 0; 
 }
 
-inline bool UART1_IsAutoBaudDetectOverflow(void)
+bool UART1_IsAutoBaudDetectOverflow(void)
 {
     return (bool)U1ERRIRbits.ABDOVF; 
 }
 
-inline void UART1_AutoBaudDetectOverflowReset(void)
+void UART1_AutoBaudDetectOverflowReset(void)
 {
     U1ERRIRbits.ABDOVF = 0; 
 }
@@ -258,7 +259,7 @@ size_t UART1_ErrorGet(void)
 {
     uart1RxLastError.status = 0;
     
-    if(U1ERRIRbits.FERIF)
+    if(true == U1ERRIRbits.FERIF)
     {
         uart1RxLastError.ferr = 1;
         if(NULL != UART1_FramingErrorHandler)
@@ -266,12 +267,20 @@ size_t UART1_ErrorGet(void)
             UART1_FramingErrorHandler();
         }  
     }
-    if(U1ERRIRbits.RXFOIF)
+    if(true == U1ERRIRbits.RXFOIF)
     {
         uart1RxLastError.oerr = 1;
         if(NULL != UART1_OverrunErrorHandler)
         {
             UART1_OverrunErrorHandler();
+        }   
+    }
+    if(true == U1ERRIRbits.PERIF)
+    {
+        uart1RxLastError.perr = 1;
+        if(NULL != UART1_ParityErrorHandler)
+        {
+            UART1_ParityErrorHandler();
         }   
     }
 
@@ -292,13 +301,19 @@ void UART1_Write(uint8_t txData)
 
 int getch(void)
 {
-    while(!(UART1_IsRxReady()));
+    while(!(UART1_IsRxReady()))
+    {
+
+    }
     return UART1_Read();
 }
 
 void putch(char txData)
 {
-    while(!(UART1_IsTxReady()));
+    while(!(UART1_IsTxReady()))
+    {
+
+    }
     return UART1_Write(txData);   
 }
 

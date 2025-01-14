@@ -10,7 +10,7 @@
  * @version PORTW Driver Version 1.0.0
 */
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -71,8 +71,8 @@ void PORTW_Initialize(void)
     //IN RC7; 
     PORTWIN7 = 0x2;
 
-    //CLK CLC1_OUT; 
-    PORTWCLK = 0x11;
+    //CLK PWM1S1P1_OUT; 
+    PORTWCLK = 0xA;
 
     //DF 0xff; 
     PORTWDF = 0xFF;

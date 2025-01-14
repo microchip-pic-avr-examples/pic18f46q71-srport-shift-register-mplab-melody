@@ -11,7 +11,7 @@
 */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -118,12 +118,12 @@ void PWM2_16BIT_Initialize(void)
     PWM2CON = 0x80;
 }
 
-void PWM2_16BIT_Enable()
+void PWM2_16BIT_Enable(void)
 {
     PWM2CON |= _PWM2CON_EN_MASK;
 }
 
-void PWM2_16BIT_Disable()
+void PWM2_16BIT_Disable(void)
 {
     PWM2CON &= (~_PWM2CON_EN_MASK);
 }
@@ -159,13 +159,21 @@ void PWM2_16BIT_PWMI_ISR(void)
     {
         PWM2GIRbits.S1P1IF = 0;
         if(PWM2_16BIT_Slice1Output1_InterruptHandler != NULL)
+        {
             PWM2_16BIT_Slice1Output1_InterruptHandler();
+        }
     }
     else if((PWM2GIEbits.S1P2IE == 1) && (PWM2GIRbits.S1P2IF == 1))
     {
         PWM2GIRbits.S1P2IF = 0;
         if(PWM2_16BIT_Slice1Output2_InterruptHandler != NULL)
+        {
             PWM2_16BIT_Slice1Output2_InterruptHandler();
+        }
+    }
+    else
+    {
+        // No Action 
     }
 }
 
@@ -173,7 +181,9 @@ void PWM2_16BIT_PWMPI_ISR(void)
 {
     PIR5bits.PWM2PIF = 0;
     if(PWM2_16BIT_Period_InterruptHandler != NULL)
+    {
         PWM2_16BIT_Period_InterruptHandler();
+    }
 }
 
 void PWM2_16BIT_Slice1Output1_SetInterruptHandler(void (* InterruptHandler)(void))

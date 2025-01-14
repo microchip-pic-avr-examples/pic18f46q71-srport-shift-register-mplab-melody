@@ -11,7 +11,7 @@
  */ 
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -77,8 +77,8 @@ void DMA1_Initialize(void)
     DMAnDSZ = 10;
     //Start Trigger : SIRQ TU16APR; 
     DMAnSIRQ = 0x5E;
-    //Abort Trigger : AIRQ DMA1DCNT; 
-    DMAnAIRQ = 0x15;
+    //Abort Trigger : AIRQ Software Interrupt; 
+    DMAnAIRQ = 0x0;
 	
     // Clear Destination Count Interrupt Flag bit
     PIR2bits.DMA1DCNTIF = 0; 
@@ -98,8 +98,8 @@ void DMA1_Initialize(void)
     PIE2bits.DMA1ORIE =1; 
 	DMA1_ORIInterruptHandlerSet(DMA1_DefaultInterruptHandler);
 	
-    //AIRQEN enabled; DGO not in progress; SIRQEN disabled; EN disabled; 
-    DMAnCON0 = 0x4;
+    //AIRQEN disabled; DGO not in progress; SIRQEN disabled; EN disabled; 
+    DMAnCON0 = 0x0;
 	 
 }
 

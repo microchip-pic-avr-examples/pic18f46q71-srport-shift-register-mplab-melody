@@ -7,11 +7,13 @@
  *
  * @brief This file contains the API definitions for the TU16A module.
  *
- * @version TU16A Driver Version 2.1.0
+ * @version TU16A Driver Version 3.0.0
+ *
+ * @version Package Version 2.0.0
  */
 
  /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -34,56 +36,74 @@
 #include <xc.h>
 #include "../tu16a.h"
 
-static void (*TU16A_InterruptHandler) (void);
-static void (*TU16A_PRMatchInterruptHandler) (void);
-static void (*TU16A_ZeroMatchInterruptHandler) (void);
-static void (*TU16A_CaptureMatchInterruptHandler) (void);
-
-const struct TMR_INTERFACE TU16A = {
-    .Initialize = TU16A_Initialize,
-    .Start = TU16A_Start,
-    .Stop = TU16A_Stop,
-    .PeriodCountSet = TU16A_Write,
-    .TimeoutCallbackRegister = NULL,
-    .Tasks = NULL
-};
+static void (*TU16A_PeriodMatchCallback)(void); 
+static void TU16A_PeriodMatchDefaultCallback(void);
+static void (*TU16A_ZeroMatchCallback)(void);
+static void TU16A_ZeroMatchDefaultCallback(void);
+static void (*TU16A_CaptureEventCallback)(void); 
+static void TU16A_CaptureEventDefaultCallback(void);
 
 void TU16A_Initialize(void)
 {
-    //Stop Timer
-    TU16ACON0bits.ON = 0;
+    TU16ACON0bits.ON = 0;        //Stop TU16A
 
-    //CIF disabled; ZIF disabled; PRIF disabled; CAPT disabled; LIMIT disabled; CLR disabled; OSEN disabled;  
-    TU16ACON1 = 0x0;
-    //STOP No hardware Stop; RESET At Start and PR match; START No hardware Start (Always On); CSYNC disabled; EPOL non inverted;  
-    TU16AHLT = 0x8;
-    //CLK TUIN0PPS;   
-    TU16ACLK = 0x0;
-    //ERS TUIN1PPS;  
-    TU16AERS = 0x1;
-    //PS 0;  
-    TU16APS = 0x0;
-    //PRH 0; 
+    TU16ACON1 = (0 << _TU16ACON1_CIF_POSN)   // CIF disabled
+        | (0 << _TU16ACON1_ZIF_POSN)   // ZIF disabled
+        | (0 << _TU16ACON1_PRIF_POSN)   // PRIF disabled
+        | (0 << _TU16ACON1_CAPT_POSN)   // CAPT disabled
+        | (0 << _TU16ACON1_LIMIT_POSN)   // LIMIT disabled
+        | (0 << _TU16ACON1_CLR_POSN)   // CLR disabled
+        | (0 << _TU16ACON1_OSEN_POSN);  // OSEN disabled
+    
+    TU16AHLT = (0 << _TU16AHLT_STOP_POSN)   // STOP No hardware Stop
+        | (2 << _TU16AHLT_RESET_POSN)   // RESET At Start and PR match
+        | (0 << _TU16AHLT_START_POSN)   // START No hardware Start (Always On)
+        | (0 << _TU16AHLT_CSYNC_POSN)   // CSYNC disabled
+        | (0 << _TU16AHLT_EPOL_POSN);  // EPOL non inverted
+    
+    TU16ACLK = (12 << _TU16ACLK_CLK_POSN);  // CLK PWM1_OUT1
+    
+    TU16AERS = (1 << _TU16AERS_ERS_POSN);  // ERS TUIN1PPS
+    
+    TU16APS = (0 << _TU16APS_PS_POSN);  // PS 0x0
+    
     TU16APRH = 0x0;
-    //PRL 7; 
     TU16APRL = 0x7;
-    //TMRH 0; 
+
     TU16ATMRH = 0x0;
-    //TMRL 0; 
     TU16ATMRL = 0x0;
 
-    // Clearing IF flag before enabling the interrupt.
-    TU16ACON1bits.PRIF = 0;
-    TU16ACON1bits.ZIF = 0;
-    TU16ACON1bits.CIF = 0;
-    // Set Default Interrupt Handler.
-    TU16A_PRMatchInterruptHandlerSet(TU16A_PRMatchDefaultInterruptHandler);
-    TU16A_InterruptHandlerSet(TU16A_DefaultInterruptHandler);
-    //Enable TUI interrupt
-    PIE5bits.TU16AIE = 1;
+    TU16A_PeriodMatchCallback = TU16A_PeriodMatchDefaultCallback;
+    TU16A_ZeroMatchCallback = TU16A_ZeroMatchDefaultCallback;
+    TU16A_CaptureEventCallback = TU16A_CaptureEventDefaultCallback;
 
-    //CIE disabled; ZIE disabled; PRIE enabled; RDSEL read; OPOL low; OM pulse mode; CPOL rising edge; ON disabled;  
-    TU16ACON0 = 0x44;
+    TU16ACON0 = (0 << _TU16ACON0_CIE_POSN)   // CIE disabled
+        | (0 << _TU16ACON0_ZIE_POSN)   // ZIE disabled
+        | (1 << _TU16ACON0_PRIE_POSN)   // PRIE enabled
+        | (0 << _TU16ACON0_RDSEL_POSN)   // RDSEL read
+        | (0 << _TU16ACON0_OPOL_POSN)   // OPOL low
+        | (0 << _TU16ACON0_OM_POSN)   // OM pulse mode
+        | (0 << _TU16ACON0_CPOL_POSN)   // CPOL falling edge
+        | (0 << _TU16ACON0_ON_POSN);  // ON disabled  
+
+    PIE5bits.TU16AIE = 1;     // Enable TUI Interrupt
+}
+
+void TU16A_Deinitialize(void)
+{
+    TU16ACON0bits.ON = 0;
+    TU16ACON0 = 0x0;
+    TU16ACON1 = 0x0;
+    TU16AHLT = 0x40;
+    TU16ACLK = 0x0;
+    TU16AERS = 0x0;
+    TU16APS = 0x0;   
+    TUCHAIN = 0x0;
+    TU16APRH = 0xFF;
+    TU16APRL = 0xFF;
+    TU16ATMRH = 0x0;
+    TU16ATMRL = 0x0;
+    PIE5bits.TU16AIE = 0;
 }
 
 void TU16A_Start(void)
@@ -96,67 +116,103 @@ void TU16A_Stop(void)
     TU16ACON0bits.ON = 0;
 }
 
-uint16_t TU16A_CaptureValueRead(void)
+uint16_t TU16A_CaptureValueGet(void)
 {
+    uint16_t captureValue;
+
     TU16ACON0bits.RDSEL = 0;
-    return (uint16_t)(((uint16_t)TU16ACRHbits.CRH<< 8) | TU16ACRLbits.CRL);
+
+    captureValue = ((uint16_t)TU16ACRH<< 8) 
+                    | (uint16_t)TU16ACRL;
+
+    return captureValue;
 }
 
 uint16_t TU16A_OnCommandCapture(void)
 {
     TU16ACON1bits.CAPT = 1;
-    while(TU16ACON1bits.CAPT == 1);
-    return TU16A_CaptureValueRead();
+
+    while(1U == TU16ACON1bits.CAPT)
+    {
+        //Wait to clear CAPT bit
+    }
+    /* cppcheck-suppress misra-c2012-8.7 */
+    return TU16A_CaptureValueGet();
 }
 
-uint16_t TU16A_Read(void)
+uint16_t TU16A_CounterGet(void)
 {
-    bool onVal = TU16ACON0bits.ON;
+    uint16_t timerVal;
+    bool onValue = TU16ACON0bits.ON;
+
     TU16ACON0bits.ON = 0;
     TU16ACON0bits.RDSEL = 1;
-    uint16_t tmrVal = (uint16_t)(((uint16_t)TU16ATMRHbits.TMRH << 8) | TU16ATMRLbits.TMRL);
-    TU16ACON0bits.ON = onVal;
-    return tmrVal;
+
+    timerVal = ((uint16_t)TU16ATMRH << 8) 
+            | (uint16_t)TU16ATMRL;
+
+    TU16ACON0bits.ON = onValue;
+
+    return timerVal;
 }
 
-void TU16A_Write(size_t timerVal)
+void TU16A_CounterSet(uint16_t timerVal)
 {
-    uint16_t timerValGet = (uint16_t) timerVal;
-    bool onVal = TU16ACON0bits.ON;
+    bool onValue = TU16ACON0bits.ON;
     TU16ACON0bits.ON = 0;
-    TU16ATMRHbits.TMRH = (uint8_t) (timerValGet >> 8);
-    TU16ATMRLbits.TMRL = (uint8_t) (timerValGet & 0xFF);
-    TU16ACON0bits.ON = onVal;
+
+    TU16ATMRH = (uint8_t)((timerVal >> 8) & 0xFFU);
+    TU16ATMRL = (uint8_t)(timerVal & 0xFFU);
+
+    TU16ACON0bits.ON = onValue;
 }
 
 void TU16A_CounterClear(void)
 {
     TU16ACON1bits.CLR = 1;
-    while(TU16ACON1bits.CLR == 1);
+    while(1U == TU16ACON1bits.CLR)
+    {
+        // wait to clear CLR bit
+    }
 }
 
-void TU16A_PeriodValueSet(uint16_t prVal)
+void TU16A_PeriodSet(uint16_t periodVal)
 {
-    TU16APRHbits.PRH = (uint8_t)((prVal >> 8) & 0xFF);
-    TU16APRLbits.PRL = (uint8_t)(prVal & 0xFF);
+    TU16APRH = (uint8_t)((periodVal >> 8) & 0xFFU);
+    TU16APRL = (uint8_t)(periodVal & 0xFFU);
 }
 
-void TU16A_PRMatchInterruptEnable(void)
+uint16_t TU16A_PeriodGet(void)
+{
+    uint16_t periodVal;
+
+    periodVal = ((uint16_t)TU16APRH << 8)
+                 | (uint16_t)TU16APRL;
+
+    return periodVal;
+}
+
+uint16_t TU16A_MaxCountGet(void)
+{
+    return TU16A_MAX_COUNT;
+}
+
+void TU16A_PeriodMatchInterruptEnable(void)
 {
     TU16ACON0bits.PRIE = 1;
 }
 
-void TU16A_PRMatchInterruptDisable(void)
+void TU16A_PeriodMatchInterruptDisable(void)
 {
     TU16ACON0bits.PRIE = 0;
 }
 
-void TU16A_ZeroInterruptEnable(void)
+void TU16A_ZeroMatchInterruptEnable(void)
 {
     TU16ACON0bits.ZIE = 1;
 }
 
-void TU16A_ZeroInterruptDisable(void)
+void TU16A_ZeroMatchInterruptDisable(void)
 {
     TU16ACON0bits.ZIE = 0;
 }
@@ -171,26 +227,6 @@ void TU16A_CaptureInterruptDisable(void)
     TU16ACON0bits.CIE = 0;
 }
 
-bool TU16A_HasPRMatchOccured(void)
-{
-    return TU16ACON1bits.PRIF;
-}
-
-bool TU16A_HasResetOccured(void)
-{
-    return TU16ACON1bits.ZIF;
-}
-
-bool TU16A_HasCaptureOccured(void)
-{
-    return TU16ACON1bits.CIF;
-}
-
-bool TU16A_IsTimerRunning(void)
-{
-    return TU16ACON1bits.RUN;
-}
-
 void TU16A_InterruptEnable(void)
 {
     PIE5bits.TU16AIE = 1;
@@ -201,9 +237,14 @@ void TU16A_InterruptDisable(void)
     PIE5bits.TU16AIE = 0;
 }
 
-bool TU16A_IsInterruptEnabled(void)
+bool TU16A_IsInterruptEnable(void)
 {
     return PIE5bits.TU16AIE;
+}
+
+bool TU16A_RunningStatusGet(void)
+{
+    return TU16ACON1bits.RUN;
 }
 
 void TU16A_InterruptFlagsClear(void)
@@ -215,54 +256,60 @@ void TU16A_InterruptFlagsClear(void)
 
 void TU16A_ISR(void)
 {
-    if(TU16A_InterruptHandler)
-    {
-        TU16A_InterruptHandler();
-    }
-    if(TU16ACON1bits.PRIF == 1U)
-    {
-        TU16ACON1bits.PRIF = 0;
-        if(TU16A_PRMatchInterruptHandler)
+    if(1U == TU16ACON1bits.PRIF)
+    {      
+        if(NULL != TU16A_PeriodMatchCallback)
         {
-            TU16A_PRMatchInterruptHandler();
+            TU16A_PeriodMatchCallback();
         }
+        TU16ACON1bits.PRIF = 0;
     }
-    // add your TU16A interrupt custom code
+    if(1U == TU16ACON1bits.ZIF)
+    {      
+        if(NULL != TU16A_ZeroMatchCallback)
+        {
+            TU16A_ZeroMatchCallback();
+        }
+        TU16ACON1bits.ZIF = 0;
+    }    
+    if(1U == TU16ACON1bits.CIF)
+    {
+        if(NULL != TU16A_CaptureEventCallback)
+        {
+            TU16A_CaptureEventCallback();
+        }
+        TU16ACON1bits.CIF = 0;
+    }
 }
 
-void TU16A_PRMatchInterruptHandlerSet(void (* InterruptHandler)(void)){
-    TU16A_PRMatchInterruptHandler = InterruptHandler;
+void TU16A_PeriodMatchCallbackRegister(void (* CallbackHandler)(void))
+{
+    TU16A_PeriodMatchCallback = CallbackHandler;
 }
 
-void TU16A_PRMatchDefaultInterruptHandler(void){
-    // add your TU16A interrupt custom code
-    // or set custom function using TU16A_PRMatchInterruptHandlerSet()
+void TU16A_ZeroMatchCallbackRegister(void (* CallbackHandler)(void))
+{
+    TU16A_ZeroMatchCallback = CallbackHandler;
 }
 
-void TU16A_ZeroMatchInterruptHandlerSet(void (* InterruptHandler)(void)){
-    TU16A_ZeroMatchInterruptHandler = InterruptHandler;
+void TU16A_CaptureEventCallbackRegister(void (* CallbackHandler)(void))
+{
+    TU16A_CaptureEventCallback = CallbackHandler;
 }
 
-void TU16A_ZeroMatchDefaultInterruptHandler(void){
-    // add your TU16A interrupt custom code
-    // or set custom function using TU16A_ZeroMatchInterruptHandlerSet()
+static void TU16A_CaptureEventDefaultCallback(void)
+{
+    //Default callback handler to avoid compiler warning
 }
 
-void TU16A_CaptureMatchInterruptHandlerSet(void (* InterruptHandler)(void)){
-    TU16A_CaptureMatchInterruptHandler = InterruptHandler;
+static void TU16A_ZeroMatchDefaultCallback(void)
+{
+    //Default callback handler to avoid compiler warning
 }
 
-void TU16A_CaptureMatchDefaultInterruptHandler(void){
-    // add your TU16A interrupt custom code
-    // or set custom function using TU16A_CaptureMatchInterruptHandlerSet()
+static void TU16A_PeriodMatchDefaultCallback(void)
+{
+    //Default callback handler to avoid compiler warning
 }
 
-void TU16A_InterruptHandlerSet(void (* InterruptHandler)(void)){
-    TU16A_InterruptHandler = InterruptHandler;
-}
-
-void TU16A_DefaultInterruptHandler(void){
-    // add your TU16A interrupt custom code
-    // or set custom function using TU16A_DefaultInterruptHandlerSet()
-}
 

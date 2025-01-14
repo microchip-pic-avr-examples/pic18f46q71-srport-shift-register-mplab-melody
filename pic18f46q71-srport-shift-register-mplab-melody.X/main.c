@@ -7,11 +7,13 @@
  * 
  * @brief This is the generated driver implementation file for the MAIN driver.
  *
- * @version MAIN Driver Version 1.0.0
+ * @version MAIN Driver Version 1.0.2
+ *
+ * @version Package Version: 3.1.2
  */
 
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -43,7 +45,7 @@ void DMA1_DCNT_CustomISR(void);
 void CLC2_CustomISR(void);
 void Config_Num_Byte(void);
 
-extern bool sw_pressed = false;
+bool sw_pressed = false;
 uint8_t mem_block[NUM_BYTE]; // Memory block to store the shifted data
 
 int main(void) {
@@ -89,10 +91,10 @@ void Config_Num_Byte() {
     DMA1_Disable();
     DMA2_Disable();
 
-    DMA1_SetDestinationAddress(&mem_block); // Set DMA1 destination address to the memory block
+    DMA1_SetDestinationAddress( (uint16_t)(&mem_block) ); // Set DMA1 destination address to the memory block
     DMA1_SetDestinationSize(NUM_BYTE);      // Set the number of messages for DMA1 to Transfer
 
-    DMA2_SetSourceAddress(&mem_block);      // Set DMA2 source address ti the memory block
+    DMA2_SetSourceAddress( (uint16_t)(&mem_block) );      // Set DMA2 source address t0 the memory block
     DMA2_SetSourceSize(NUM_BYTE);           // Set the number of messages for DMA2 to Transfer
 
     DMA1_Enable();

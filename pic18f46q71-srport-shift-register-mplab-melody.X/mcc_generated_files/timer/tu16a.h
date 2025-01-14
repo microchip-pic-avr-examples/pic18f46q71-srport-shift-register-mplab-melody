@@ -5,14 +5,15 @@
  *  
  * @defgroup tu16a TU16A
  *
- * @brief This file contains the API prototypes for the TU16A module.
+ * @brief This file contains API prototypes and other data types for the TU16A module.
  *
- * @version TU16A Driver Version 2.1.0
+ * @version TU16A Driver Version 3.0.0
+ *
+ * @version Package Version 2.0.0
  */
  
-
 /*
-© [2023] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -39,65 +40,78 @@
   Section: Included Files
 */
 
-#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "timer_interface.h"
 
 /**
-  Section: TU16A APIs
-*/
-
-/**
- *@ingroup tu16a
- *@struct TMR_INTERFACE
- *@brief Instance of the TMR_INTERFACE for the Universal Timer (UTMR) module.
+ * @misradeviation{@advisory,2.5}
+ * MCC Melody drivers provide macros that can be added to an application.
+ * It depends on the application whether a macro is used or not. 
  */
-extern const struct TMR_INTERFACE TU16A;
 
 /**
- *@ingroup tu16a
- *@brief Initializes the module register values.
- *@pre None.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Defines the maximum count of the timer.
+ */
+/* cppcheck-suppress misra-c2012-2.5 */
+#define TU16A_MAX_COUNT (0xFFFFU)
+/**
+ * @ingroup tu16a
+ * @brief Defines the timer prescaled clock frequency in hertz.
+ */
+/* cppcheck-suppress misra-c2012-2.5 */
+#define TU16A_CLOCK_FREQ (0UL)
+
+/**
+ * @ingroup tu16a
+ * @brief Initializes the TU16A module.
+ * @param None.
+ * @return None.
  */
 void TU16A_Initialize(void);
 
 /**
- *@ingroup tu16a
- *@brief Starts the TU16A.
- *@pre Intialize the TU16A before calling this function.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Deinitializes the TU16A module.
+ * @param None.
+ * @return None.
+ */
+void TU16A_Deinitialize(void);
+
+/**
+ * @ingroup tu16a
+ * @brief Starts the TU16A.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return None.
  */
 void TU16A_Start(void);
 
 /**
- *@ingroup tu16a
- *@brief Stops the TU16A.
- *@pre Initialize the TU16A before calling this function.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Stops the TU16A.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return None.
  */
 void TU16A_Stop(void);
 
 /**
- *@ingroup tu16a
- *@brief Reads the uint16-bit value of the Capture register.
- *@pre Initialize the TU16A before calling this function.
- *@param None.
- *@return uint16-bit value of the Capture register.
+ * @ingroup tu16a
+ * @brief Returns the captured counter value from the Timer Capture register.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return Captured counter value
  */
-uint16_t TU16A_CaptureValueRead(void);
+uint16_t TU16A_CaptureValueGet(void);
 
 /**
- *@ingroup tu16a
- *@brief Captures the current timer value and stores it in the Capture register.
- *@pre Initialize the TU16A before calling this function.
- *@param None.
- *@return uint16-bit value of the Capture register.
- *@note When the UTMR Enable and Clock Synchronization (CSYNC) bits are set, it takes three timer clock cycles to synchronize the clocks.
+ * @ingroup tu16a
+ * @brief Executes the capture command and returns the captured count value from the Timer Capture register.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return Captured counter value
+ * @note When the UTMR Enable and Clock Synchronization (CSYNC) bits are set, it takes three timer clock cycles to synchronize the clocks.
  *      Clearing the UTMR Enable bit would require the selected clock source, especially the External Cock Sources (ERS), to supply at least three additional
  *      clock cycles to resolve the internal state. The user must be careful because if the timer is already running, any Stop/Reset-related ERS events that get
  *      processed will continue to affect the Run state of the timer.
@@ -105,42 +119,42 @@ uint16_t TU16A_CaptureValueRead(void);
 uint16_t TU16A_OnCommandCapture(void);
 
 /**
- *@ingroup tu16a
- *@brief Reads the Timer Counter register value.
- *@pre Initialize the TU16A before calling this function.
- *@param None.
- *@return Current value of the Timer Counter register.
- *@note The Timer Counter register is not double-buffered, thus the timer must be
+ * @ingroup tu16a
+ * @brief Returns the current counter value.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return Counter value from the Timer Counter register
+ * @note The Timer Counter register is not double-buffered, thus the timer must be
  *      stopped before writing to it. If the desired action is to clear the counter
  *      while the timer is running, consider using the CounterClear() API. If the
  *      desired action is to change the overall period of the timer (running or not),
  *      consider changing the Timer Period register (which is double-buffered) through the
- *      PeriodValueSet() API.
+ *      PeriodSet() API.
  */
-uint16_t TU16A_Read(void);
+uint16_t TU16A_CounterGet(void);
 
 /**
- *@ingroup tu16a
- *@brief Writes the Timer Counter register value.
- *@pre Initialize the TU16A before calling this function.
- *@param timerVal - Value to write to the Timer Counter register.
- *@return None.
- *@note The Timer Counter register is not double-buffered, thus the timer must be
+ * @ingroup tu16a
+ * @brief Sets the counter value.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param timerVal - Counter value to be written to the Timer Counter register
+ * @return None.
+ * @note The Timer Counter register is not double-buffered, thus the timer must be
  *      stopped before writing to it. If the desired action is to clear the counter
  *      while the timer is running, consider using the CounterClear() API. If the
  *      desired action is to change the overall period of the timer (running or not),
  *      consider changing the Timer Period register (which is double-buffered) through the
- *      PeriodValueSet() API.
+ *      PeriodSet() API.
  */
-void TU16A_Write(size_t timerVal);
+void TU16A_CounterSet(uint16_t timerVal);
 
 /**
- *@ingroup tu16a
- *@brief Clears the Timer Counter and the internal prescaler counter to zero.
- *@pre Initialize the TU16A before calling this function.
- *@param None.
- *@return None.
- *@note When the UTMR Enable and Clock Synchronization (CSYNC) bits are set, it takes three timer clock cycles to synchronize the clocks.
+ * @ingroup tu16a
+ * @brief Clears the Timer Counter and the internal prescaler counter to zero.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return None.
+ * @note When the UTMR Enable and Clock Synchronization (CSYNC) bits are set, it takes three timer clock cycles to synchronize the clocks.
  *      Clearing the UTMR Enable bit would require the selected clock source, especially the External Cock Sources (ERS), to supply at least three additional
  *      clock cycles to resolve the internal state. The user must be careful because if the timer is already running, any Stop/Reset-related ERS events that get
  *      processed will continue to affect the Run state of the timer.
@@ -148,227 +162,166 @@ void TU16A_Write(size_t timerVal);
 void TU16A_CounterClear(void);
 
 /**
- *@ingroup tu16a
- *@brief Writes the value to the Period registers.
- *@pre Initialize the TU16A before calling this function.
- *@param prVal - Value to load to the Period register.
- *@return None.
- *@note Writing to the Timer Period register is double-buffered,
+ * @ingroup tu16a
+ * @brief Sets the period value to the Timer Period register.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param prVal - Period value to be written to the Timer Period register
+ * @return None.
+ * @note Writing to the Timer Period register is double-buffered,
  *      thus stopping the UTMR is not required. This must be followed
  *      by a Reset event for the new period value to become effective.
  */
-void TU16A_PeriodValueSet(uint16_t prVal);
+void TU16A_PeriodSet(uint16_t periodVal);
 
 /**
- *@ingroup tu16a
- *@brief Enables the Period register match interrupt.
- *@pre None.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Returns the current period value.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return Current period count value
  */
-void TU16A_PRMatchInterruptEnable(void);
+uint16_t TU16A_PeriodGet(void);
 
 /**
- *@ingroup tu16a
- *@brief Disables the Period register match interrupt.
- *@pre None.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Returns the maximum count value.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return Maximum count value
  */
-void TU16A_PRMatchInterruptDisable(void);
+uint16_t TU16A_MaxCountGet(void);
 
 /**
- *@ingroup tu16a
- *@brief Enables the zero condition match interrupt.
- *@pre None.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Enables the period match interrupt.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return None.
  */
-void TU16A_ZeroInterruptEnable(void);
+void TU16A_PeriodMatchInterruptEnable(void);
 
 /**
- *@ingroup tu16a
- *@brief Disables the zero condition match interrupt.
- *@pre None.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Disables the period match interrupt.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return None.
  */
-void TU16A_ZeroInterruptDisable(void);
+void TU16A_PeriodMatchInterruptDisable(void);
 
 /**
- *@ingroup tu16a
- *@brief Enables the capture interrupt.
- *@pre None.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Enables the zero condition match interrupt.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return None.
+ */
+void TU16A_ZeroMatchInterruptEnable(void);
+
+/**
+ * @ingroup tu16a
+ * @brief Disables the zero condition match interrupt.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return None.
+ */
+void TU16A_ZeroMatchInterruptDisable(void);
+
+/**
+ * @ingroup tu16a
+ * @brief Enables the capture interrupt.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return None.
  */
 void TU16A_CaptureInterruptEnable(void);
 
 /**
- *@ingroup tu16a
- *@brief Disables the capture interrupt.
- *@pre None.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Disables the capture interrupt.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return None.
  */
 void TU16A_CaptureInterruptDisable(void);
 
 /**
- *@ingroup tu16a
- *@brief Returns the Period Match Interrupt flag status.
- *@pre None.
- *@param None.
- *@retval True - The counter has incremented from PR-1 to PR.
- *@retval False - The counter has not incremented from PR-1 to PR since this bit was last cleared.
- */
-bool TU16A_HasPRMatchOccured(void);
-
-/**
- *@ingroup tu16a
- *@brief Returns the Zero Interrupt flag status.
- *@pre None.
- *@param None.
- *@retval True - The counter has reset or rolled over to zero.
- *@retval False - The counter has not reset or rolled over since this bit was last cleared.
- */
-bool TU16A_HasResetOccured(void);
-
-/**
- *@ingroup tu16a
- *@brief Returns the Capture Interrupt flag status.
- *@pre None.
- *@param None.
- *@retval True - A capture event has occurred.
- *@retval False - A capture event has not occurred since this bit was last cleared.
- */
-bool TU16A_HasCaptureOccured(void);
-
-/**
- *@ingroup tu16a
- *@brief Returns the UTMR running flag status.
- *@pre None.
- *@param None.
- *@retval True - UTMR is running and not being held in Reset by the External Reset Source (ERS).
- *@retval False - UTMR is not running or is held in Reset by the ERS.
- */
-bool TU16A_IsTimerRunning(void);
-
-/**
- *@ingroup tu16a
- *@brief Enables the UTMR main interrupt.
- *@pre None.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Enables the UTMR main interrupt.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return None.
  */
 void TU16A_InterruptEnable(void);
 
 /**
- *@ingroup tu16a
- *@brief Disables the UTMR main interrupt.
- *@pre None.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Disables the UTMR main interrupt.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return None.
  */
 void TU16A_InterruptDisable(void);
 
 /**
- *@ingroup tu16a
- *@brief Returns the status of the main UTMR interrupt flag.
- *@pre None.
- *@param None.
- *@retval True - Interrupt is enabled.
- *@retval False - Interrupt is disabled.
+ * @ingroup tu16a
+ * @brief Returns the status of the UTMR Interrupt Enable bit.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @retval True - Interrupt is enabled
+ * @retval False - Interrupt is disabled
  */
-bool TU16A_IsInterruptEnabled(void);
+bool TU16A_IsInterruptEnable(void);
 
 /**
- *@ingroup tu16a
- *@brief Clears the status bit of the UTMR module interrupt flags.
- *@pre None.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Returns the UTMR Running flag status.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @retval True - UTMR is running and not being held in Reset by the External Reset Source (ERS)
+ * @retval False - UTMR is not running or is held in Reset by the ERS
+ */
+bool TU16A_RunningStatusGet(void);
+
+/**
+ * @ingroup tu16a
+ * @brief Clears the UTMR module interrupt flags.
+ * @pre Initialize TU16A with TU16A_Initialize() before calling this API.
+ * @param None.
+ * @return None.
  */
 void TU16A_InterruptFlagsClear(void);
 
 /**
- *@ingroup tu16a
- *@brief Interrupt Service Routine (ISR) of the UTMR module.
- *@pre Initialize the UTMR module with interrupts enabled before calling this API.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Interrupt Service Routine (ISR) of the UTMR interrupts.
+ * @param None.
+ * @return None.
  */
 void TU16A_ISR(void);
 
 /**
- *@ingroup tu16a
- *@brief Registers a callback function to be called for the Period Match interrupt event.
- *@pre Initialize the UTMR module with interrupts enabled before calling this API.
- *@param void(*InterruptHandler)(void) - Pointer to the Period Match interrupt event handler.
- *@return None.
+ * @ingroup tu16a
+ * @brief Registers a callback function for the TU16A Period Match interrupt event.
+ * @param CallbackHandler - Address to the custom callback function
+ * @return None.
  */
-void TU16A_PRMatchInterruptHandlerSet(void (* InterruptHandler)(void));
+void TU16A_PeriodMatchCallbackRegister(void (* CallbackHandler)(void));
 
 /**
- *@ingroup tu16a
- *@brief Default Period Match interrupt handler function.
- *@pre Initialize the UTMR module with interrupts enabled before calling the ISR.
- *@param None.
- *@return None.
+ * @ingroup tu16a
+ * @brief Registers a callback function for the TU16A zero match or Reset interrupt event.
+ * @param CallbackHandler - Address to the custom callback function
+ * @return None.
  */
-void TU16A_PRMatchDefaultInterruptHandler(void);
+void TU16A_ZeroMatchCallbackRegister(void (* CallbackHandler)(void));
 
 /**
- *@ingroup tu16a
- *@brief Registers a callback function to be called for the Zero Match interrupt event.
- *@pre Initialize the UTMR module with interrupts enabled before calling this API.
- *@param void(*InterruptHandler)(void) - Pointer to the Zero Match interrupt event handler.
- *@return None.
+ * @ingroup tu16a
+ * @brief Registers a callback function for the TU16A capture event.
+ * @param CallbackHandler - Address to the custom callback function
+ * @return None.
  */
-void TU16A_ZeroMatchInterruptHandlerSet(void (* InterruptHandler)(void));
-
-/**
- *@ingroup tu16a
- *@brief Default Zero Match interrupt handler function.
- *@pre Initialize the UTMR module with interrupts enabled before calling the ISR.
- *@param None.
- *@return None.
- */
-void TU16A_ZeroMatchDefaultInterruptHandler(void);
-
-/**
- *@ingroup tu16a
- *@brief Registers a callback function to be called for the Capture Match interrupt event.
- *@pre Initialize the UTMR module with interrupts enabled before calling this API.
- *@param void(*InterruptHandler)(void) - Pointer to the Capture Match interrupt event handler.
- *@return None.
- */
-void TU16A_CaptureMatchInterruptHandlerSet(void (* InterruptHandler)(void));
-
-/**
- *@ingroup tu16a
- *@brief Default Capture Match interrupt handler function.
- *@pre Initialize the UTMR module with interrupts enabled before calling the ISR.
- *@param None.
- *@return None.
- */
-void TU16A_CaptureMatchDefaultInterruptHandler(void);
-
-/**
- *@ingroup tu16a
- *@brief Registers a callback function to be called for the main interrupt event.
- *@pre Initialize the UTMR module with interrupts enabled before calling this API.
- *@param void(*InterruptHandler)(void) - Pointer to the interrupt event handler.
- *@return None.
- */
-void TU16A_InterruptHandlerSet(void (* InterruptHandler)(void));
-
-/**
- *@ingroup tu16a
- *@brief Default interrupt handler function.
- *@pre Initialize the UTMR module with interrupts enabled before calling the ISR.
- *@param None.
- *@return None.
- */
-void TU16A_DefaultInterruptHandler(void);
+void TU16A_CaptureEventCallbackRegister(void (* CallbackHandler)(void));
 
 #endif //TU16A_H
