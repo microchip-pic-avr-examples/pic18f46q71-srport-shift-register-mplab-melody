@@ -16,9 +16,9 @@ For more details and code examples on the PIC18F46Q71, click on the following li
 
 ## Software Used
 
-- [MPLAB® X IDE  v6.15](http://www.microchip.com/mplab/mplab-x-ide) or newer
-- [MPLAB® XC8 v2.45](http://www.microchip.com/mplab/compilers) or newer
-- [PIC18F-Q_DFP v1.22.425](https://packs.download.microchip.com/) or newer Series Device Pack
+- [MPLAB® X IDE  v6.20](http://www.microchip.com/mplab/mplab-x-ide) or newer
+- [MPLAB® XC8 v3.0](http://www.microchip.com/mplab/compilers) or newer
+- [PIC18F-Q_DFP v1.26.442](https://packs.download.microchip.com/) or newer Series Device Pack
 
 ## Hardware Used
 
@@ -46,7 +46,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
 
   <br>Module configuration:
   - PORTW Clock: Enabled
-  - Clock Source: CLC1_OUT
+  - Clock Source: PWM1S1P1_OUT 
   - Data Flip Flops: Enabled
   - PORTWIN0: RW1
   - PORTWIN1: RW2
@@ -57,13 +57,6 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - PORTWIN6: RW7
   - PORTWIN7: RC7 (Physical pin RC7 is used as input to the SRPORT module)
   <br><img src="images/Q71-SRPORT.png" width="400">
-
-
-- **UART1PLIB:**
-  - Enable UART: Enabled
-  - Enable Receive: Enabled
-  - Enable Transmit: Enabled
-  <br><img src="images/Q71-UART1PLIB.png" width="400">
 
 
 - **UART1:**
@@ -78,7 +71,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
 
 
 - **PWM1**
-<br>The PWM1 module is used to generate a 1 kHz clock signal. This clock signal is used as an input (through the Configurable Logic Cell (CLC) module) to the SRPORT and the Universal Timer modules. Data shift and storage is done based on the rising edge of this clock signal.
+<br>The PWM1 module is used to generate a 1 kHz clock signal. This clock signal is used as an input to the SRPORT and the Universal Timer modules. Data shift and storage is done based on the rising edge of this clock signal.
 
   Module configuration:
   - PWM: Enabled
@@ -110,7 +103,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
 
   Module configuration:
   - Timer: Disabled
-  - Clock Source: TUIN0PPS
+  - Clock Source: PWM1_OUT1 
   - Clock Polarity: Rising edge
   - Period Count: 7
   - Start Condition: No hardware start
@@ -146,7 +139,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Start Trigger: TU16APR (Disabled)
   - Abort Trigger: DMA1DCNT (Enabled)
   - Source Region: SFR
-  - Source Module: SRPORT
+  - Source Module: PORTW 
   - Source SFR: PORTW
   - Source Mode: Unchanged
   - Source Message Size: 1
@@ -183,15 +176,6 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   <br><img src="images/Q71-DMA2.png" width="400">
 
 
-- **CLC1**
-<br>The CLC1 module is used as a buffer to redirect the input clock signal to the Signal Routing Port module.
-
-  Module configuration:
-  - CLC: Enabled
-  - Logic Cell Mode: AND-OR
-  <br><img src="images/Q71-CLC1.png" width="400">
-
-
 - **CLC2**
 <br>The CLC2 module is used in conjunction with the Timer2 module to create a hardware based code-free switch debouncer. Refer to the Timer2 module configuration for more details.
 
@@ -221,13 +205,11 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   | :------: | :------------:     | :---------: |
   |   RB3    | Digital output     | UART1 TX    |
   |   RB5    | Digital output     | TU16A OUT   |
-  |   RC6    | Digital input      | TUIN0PPS    |
-  |   RC6    | Digital input      | CLCIN0PPS   |
   |   RB6    | Digital output     | PWM1OUT1    |
   |   RB7    | Digital output     | PWM2OUT1    |
   |   RC7    | Digital input      | PORTWIN7*   |
   |   RC4    | Digital input      | T2INPPS     |
-  |   RA7    | Digital output     | LED         |
+  |   RA7    | Digital output     | LED1        |
   |   RW0    | Internal Connection| PORTWIN0*   |
   |   RW1    | Internal Connection| PORTWIN1*   |
   |   RW2    | Internal Connection| PORTWIN2*   |

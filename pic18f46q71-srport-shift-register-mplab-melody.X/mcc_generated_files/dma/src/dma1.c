@@ -77,8 +77,8 @@ void DMA1_Initialize(void)
     DMAnDSZ = 10;
     //Start Trigger : SIRQ TU16APR; 
     DMAnSIRQ = 0x5E;
-    //Abort Trigger : AIRQ Software Interrupt; 
-    DMAnAIRQ = 0x0;
+    //Abort Trigger : AIRQ DMA1DCNT; 
+    DMAnAIRQ = 0x15;
 	
     // Clear Destination Count Interrupt Flag bit
     PIR2bits.DMA1DCNTIF = 0; 
@@ -98,8 +98,8 @@ void DMA1_Initialize(void)
     PIE2bits.DMA1ORIE =1; 
 	DMA1_ORIInterruptHandlerSet(DMA1_DefaultInterruptHandler);
 	
-    //AIRQEN disabled; DGO not in progress; SIRQEN disabled; EN disabled; 
-    DMAnCON0 = 0x0;
+    //AIRQEN enabled; DGO not in progress; SIRQEN disabled; EN disabled; 
+    DMAnCON0 = 0x4;
 	 
 }
 

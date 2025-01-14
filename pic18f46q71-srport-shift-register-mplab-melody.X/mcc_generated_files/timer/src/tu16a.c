@@ -83,7 +83,7 @@ void TU16A_Initialize(void)
         | (0 << _TU16ACON0_RDSEL_POSN)   // RDSEL read
         | (0 << _TU16ACON0_OPOL_POSN)   // OPOL low
         | (0 << _TU16ACON0_OM_POSN)   // OM pulse mode
-        | (0 << _TU16ACON0_CPOL_POSN)   // CPOL falling edge
+        | (1 << _TU16ACON0_CPOL_POSN)   // CPOL rising edge
         | (0 << _TU16ACON0_ON_POSN);  // ON disabled  
 
     PIE5bits.TU16AIE = 1;     // Enable TUI Interrupt
