@@ -27,7 +27,7 @@ For more details and code examples on the PIC18F46Q71, click on the following li
 
 
 ## Shift Register
-Shift registers are important digital components that can be used to store and transfer data. A SIPO shift register can be used in applications where data buffering or data acquisition based on a clock is needed. A SIPO shift register consists of multiple flip flops chained together in series with data and clock signals as inputs. In this code example, the parallel output is stored as bytes of data in memory. A block diagram of a basic SIPO shift register is shown below:
+Shift registers are important digital components that can be used to store and transfer data. An SIPO shift register can be used in applications where data buffering or data acquisition based on a clock is needed. An SIPO shift register consists of multiple flip flops chained together in series with data and clock signals as inputs. In this code example, the parallel output is stored as bytes of data in memory. A block diagram of a basic SIPO shift register is shown below:
 <br><img src="images/Q71-SHIFT-REGISTER.png" width="700">
 
 
@@ -39,9 +39,9 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
 
 - **SRPORT**
 <br>In this code example, the Signal Routing Port module is used to shift and store data based on an incoming clock signal. The SRPORT is configured as a shift register by internally connecting the output of each signal routing pin to the input of the previous signal routing pin.
-<br><img src="images/Q71-SRPORT-SETUP.png" width="800">
+<br><br><img src="images/Q71-SRPORT-SETUP.png" width="800">
 
-  The value of the signal is stored and shifted at each rising edge of the clock signal. After each eight clock cycles, an eight-bit value representing the data signal (for the previous eight clock cycle time frame) is stored in the PORTW register. The value of the PORTW register should be read or transferred to memory before the next rising edge of the clock. The timing diagram of a SIPO shift register is shown below:
+  The value of the signal is stored and shifted at each rising edge of the clock signal. After each eight clock cycles, an eight-bit value representing the data signal (for the previous eight clock cycle time frame) is stored in the PORTW register. The value of the PORTW register will be read or transferred to memory before the next rising edge of the clock. The timing diagram of an SIPO shift register is shown below:
   <br><img src="images/Q71-WAVEFORM.png" width="400">
 
   <br>Module configuration:
@@ -56,7 +56,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - PORTWIN5: RW6
   - PORTWIN6: RW7
   - PORTWIN7: RC7 (Physical pin RC7 is used as input to the SRPORT module)
-  <br><img src="images/Q71-SRPORT.png" width="400">
+  <br><br><img src="images/Q71-SRPORT.png" width="400">
 
 
 - **UART1:**
@@ -67,7 +67,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Data Size: 8
   - Stop Bits: 1
   - Redirect Printf to UART: Enabled
-  <br><img src="images/Q71-UART1.png" width="400">
+  <br><br><img src="images/Q71-UART1.png" width="400">
 
 
 - **PWM1**
@@ -78,7 +78,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Clock Source: Fosc
   - Frequency: 1 KHz
   - Duty Cycle: 50%
-  <br><img src="images/Q71-PWM1.png" width="400">
+  <br><br><img src="images/Q71-PWM1.png" width="400">
 
 
 - **PWM2**
@@ -89,13 +89,13 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Clock Source: MFINTOSC 500 KHz
   - Frequency: 300 Hz
   - Duty Cycle: 65%
-  <br><img src="images/Q71-PWM2.png" width="400">
+  <br><br><img src="images/Q71-PWM2.png" width="400">
 
 
 
 - **UTMR Driver**
   - Timer Dependency: TU16A
-  <br><img src="images/Q71-UTMR.png" width="400">
+  <br><br><img src="images/Q71-UTMR.png" width="400">
 
 
 - **TU16A**
@@ -113,7 +113,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Output Polarity: Low
   - Timer Interrupt: Enabled
   - PR Match Interrupt: Enabled
-  <br><img src="images/Q71-TU16A.png" width="400">
+  <br><br><img src="images/Q71-TU16A.png" width="400">
 
 
 - **TMR2**
@@ -128,7 +128,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - Clock Polarity: Rising Edge
   - Prescaler: 1:4
   - Time Period: 30 ms
-  <br><img src="images/Q71-TMR2.png" width="400">
+  <br><br><img src="images/Q71-TMR2.png" width="400">
 
 
 - **DMA1**
@@ -185,7 +185,7 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
   - CLC Interrupt: Enabled
   - Rising Interrupt: Enabled
   - Falling Interrupt: Enabled
-  <br><img src="images/Q71-CLC2.png" width="400">
+  <br><br><img src="images/Q71-CLC2.png" width="400">
 
 
 - **Clock Control:**
@@ -203,13 +203,13 @@ The following peripheral configurations are set up using MPLAB® Code Configurat
 
   |   Pin    | Configuration      | Function    |
   | :------: | :------------:     | :---------: |
-  |   RB3    | Digital output     | UART1 TX    |
-  |   RB5    | Digital output     | TU16A OUT   |
-  |   RB6    | Digital output     | PWM1OUT1    |
-  |   RB7    | Digital output     | PWM2OUT1    |
-  |   RC7    | Digital input      | PORTWIN7*   |
-  |   RC4    | Digital input      | T2INPPS     |
-  |   RA7    | Digital output     | LED1        |
+  |   RB3    | Digital Output     | UART1 TX    |
+  |   RB5    | Digital Output     | TU16A OUT   |
+  |   RB6    | Digital Output     | PWM1OUT1    |
+  |   RB7    | Digital Output     | PWM2OUT1    |
+  |   RC7    | Digital Input      | PORTWIN7*   |
+  |   RC4    | Digital Input      | T2INPPS     |
+  |   RA7    | Digital Output     | LED1        |
   |   RW0    | Internal Connection| PORTWIN0*   |
   |   RW1    | Internal Connection| PORTWIN1*   |
   |   RW2    | Internal Connection| PORTWIN2*   |
