@@ -10,7 +10,7 @@
         "shortDescription": "This code example demonstrates a SIPO shift register application using the signal routing port peripheral using PIC18-Q71 family of devices.",
         "ide": {
             "name": "MPLAB X",
-            "semverRange": "^6.15.0"
+            "semverRange": "^6.20.0"
         },
         "compiler": [
             {
